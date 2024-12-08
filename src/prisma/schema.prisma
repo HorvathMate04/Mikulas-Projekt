@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model gift_kid {
+  kid   Int?
+  gift  Int?
+  id    Int    @id @default(autoincrement())
+  kids  kids?  @relation(fields: [kid], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "gift_kid_ibfk_1")
+  gifts gifts? @relation(fields: [gift], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "gift_kid_ibfk_2")
+
+  @@index([gift], map: "gift")
+  @@index([kid], map: "kid")
+}
+
+model gifts {
+  id       Int        @id @default(autoincrement())
+  name     String?    @db.VarChar(255)
+  material String?    @db.VarChar(255)
+  weigth   Int?
+  gift_kid gift_kid[]
+}
+
+model kids {
+  id       Int        @id @default(autoincrement())
+  name     String?    @db.VarChar(255)
+  address  String?    @db.VarChar(255)
+  behaved  Boolean?
+  gift_kid gift_kid[]
+}
